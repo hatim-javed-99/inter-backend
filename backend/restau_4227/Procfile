@@ -1,2 +1,3 @@
 web: gunicorn restau_4227.wsgi
 release: python manage.py migrate
+release: python manage.py collectstatic
