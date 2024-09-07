@@ -1,9 +1,11 @@
+from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet, ViewSet
 
-from users.api.v1.serializer import SignupSerializer, UserSerializer, LoginSerializer
+from users.api.v1.serializer import SignupSerializer, UserSerializer, LoginSerializer, SuperUserSerializer
 from users.models import Profile
 
 
@@ -43,3 +45,12 @@ class UserSearchView(ModelViewSet):
         else:
             queryset = Profile.objects.all()
         return queryset
+
+
+class CreateSuperUserAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = SuperUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'detail': 'Superuser created successfully'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
