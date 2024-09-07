@@ -102,10 +102,10 @@ DATABASES = {
     }
 }
 
-DATABASE_URL = env.str("DATABASE_URL", default=None)
-
-if DATABASE_URL:
-    DATABASES = {"default": env.db("DATABASE_URL")}
+# DATABASE_URL = env.str("DATABASE_URL", default=None)
+#
+# if DATABASE_URL:
+#     DATABASES = {"default": env.db("DATABASE_URL")}
 
 # DATABASES = {
 #     'default': {
