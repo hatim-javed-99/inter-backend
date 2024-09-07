@@ -5,6 +5,7 @@ from users.models import Profile
 
 class Supplier(models.Model):
     name = models.CharField(max_length=255)
+    # user = models.ForeignKey(Profile, related_name='suppliers', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
