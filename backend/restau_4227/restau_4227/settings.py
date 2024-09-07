@@ -102,9 +102,10 @@ DATABASES = {
     }
 }
 
+DATABASE_URL = env.str("DATABASE_URL", default=None)
 
-if env.str("DATABASE_URL", default=None):
-    DATABASES = {"default": env.db()}
+if DATABASE_URL:
+    DATABASES = {"default": env.db("DATABASE_URL")}
 
 # DATABASES = {
 #     'default': {
@@ -168,5 +169,5 @@ REST_FRAMEWORK = {
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-import django_heroku
-django_heroku.settings(locals())
+# import django_heroku
+# django_heroku.settings(locals())
