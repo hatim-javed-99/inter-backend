@@ -30,7 +30,7 @@ env.read_env(env_file)
 SECRET_KEY = 'django-insecure-^gb0lg63*vf)*$y8ti4anqm+iw-%d*rst-a_&)xg4*4l43+fdb'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = env.list("HOST", default=["*"])
 
@@ -102,10 +102,10 @@ DATABASES = {
     }
 }
 
-# DATABASE_URL = env.str("DATABASE_URL", default=None)
-#
-# if DATABASE_URL:
-#     DATABASES = {"default": env.db("DATABASE_URL")}
+DATABASE_URL = env.str("DATABASE_URL", default=None)
+
+if DATABASE_URL:
+    DATABASES = {"default": env.db("DATABASE_URL")}
 
 # DATABASES = {
 #     'default': {
