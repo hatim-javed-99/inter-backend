@@ -1,10 +1,10 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 
 from .models import Product, Category, SubCategory, Supplier, Order
 from .serializers import SupplierSerializer, CategorySerializer, ProductSerializer, OrderSerializer, \
-    SubCategorySerializer
+    SubCategorySerializer, OrderCreateSerializer
 
 
 class SupplierViewSet(viewsets.ModelViewSet):
@@ -24,7 +24,7 @@ class SubCategoryViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         query_params = self.request.query_params.get('category')
         if query_params:
-            queryset = SubCategory.objects.filter(sub_category=query_params)
+            queryset = SubCategory.objects.filter(category=query_params)
         else:
             queryset = SubCategory.objects.all()
         return queryset
@@ -37,7 +37,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         query_params = self.request.query_params.get('sub_category')
         if query_params:
-            queryset = Product.objects.filter(category=query_params)
+            queryset = Product.objects.filter(sub_category=query_params)
         else:
             queryset = Product.objects.all()
         return queryset
@@ -45,22 +45,20 @@ class ProductViewSet(viewsets.ModelViewSet):
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    authentication_classes = [TokenAuthentication]
+    # authentication_classes = [TokenAuthentication]
     # permission_classes = [permissions.IsAuthenticated]
 
-    def create(self, request, *args, **kwargs):
-        orders_data = request.data
-        if isinstance(orders_data, list):
-            created_orders = []
-            for order_data in orders_data:
-                serializer = self.get_serializer(data=order_data)
-                serializer.is_valid(raise_exception=True)
-                self.perform_create(serializer)
-                created_orders.append(serializer.data)
-            return Response(created_orders, status=status.HTTP_201_CREATED)
+
+    def get_queryset(self):
+        query_params = self.request.query_params.get('user_id')
+        if query_params:
+            queryset = Order.objects.filter(user=query_params)
         else:
-            return Response(
-                {"detail": "Request data must be a list of orders."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            queryset = Order.objects.all()
+        return queryset
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return OrderCreateSerializer
+        return OrderSerializer
 
